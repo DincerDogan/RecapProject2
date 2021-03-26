@@ -4,10 +4,17 @@ using Entity.Concrete;
 using Entity.DTOs;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
+using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Results;
+using FluentValidation;
+using ValidationException = FluentValidation.ValidationException;
+
 
 namespace Business.Concrete
 {
@@ -20,18 +27,41 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
+        [ValidationAspect(typeof(CarValidator))]
         public IResult AddCar(Car car)
         {
-            if (car.DailyPrice > 0 && car.Description.Length > 2)
-            {
-                _carDal.Add(car);
+            //Bussiness Code
+            //Validation
+            ////if (car.DailyPrice > 0 && car.Description.Length > 2)
+            ////{
+            
+               //var context =new ValidationContext<Car>(car);
+               //CarValidator carValidator=new CarValidator();
+               //var result = carValidator.Validate(context);
+               //if (!result.IsValid)
+               //{
+               //  throw new ValidationException(result.Errors);
+               //}
+               
+
+               //////ValidationTool.Validate(new CarValidator(), car);
+               //business codes
+               //Loglama
+               //cacheremove
+               //performance
+               //transaction
+               //yetkilendirme
+               //
+               _carDal.Add(car);
                 return new SuccessResult(Messages.CarAdded);
-            }
-            else if (car.DailyPrice <= 0)
-                return new ErrorResult(Messages.CarDailyPriceInvalid);
-            else if (car.Description.Length <= 2)
-                return new ErrorResult(Messages.CarDescriptionInvalid);
-            else return new ErrorResult(Messages.InvalidRequest);
+
+
+            ////}
+            ////else if (car.DailyPrice <= 0)
+            ////    return new ErrorResult(Messages.CarDailyPriceInvalid);
+            ////else if (car.Description.Length <= 2)
+            ////    return new ErrorResult(Messages.CarDescriptionInvalid);
+            ////else return new ErrorResult(Messages.InvalidRequest);
 
         }
 
